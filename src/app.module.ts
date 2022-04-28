@@ -6,14 +6,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { DBModule } from './db/db.module';
+
 import { ContactsheetModule } from './contactsheet/contactsheet.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+
 import { ContactSheet } from './contactsheet/model/contactsheet.entity';
-import { Console } from 'console';
+
 import { HttpErrorFilter } from './helper/http-error.filter';
 import { LoggingInterceptor } from './helper/logging.interceptor';
+import { User } from './user/models/user.entity';
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -30,20 +31,24 @@ dotenv.config();
       password: process.env.DB_PWD,
       database: process.env.DB_NAME,
       //entities: [__dirname + '/../**/*.entity.{js,ts}'],
-      entities:[ContactSheet],
+      entities: [ContactSheet,User],
       synchronize: true,
     }),
-   // UserModule,
-   // DBModule,
-    ContactsheetModule],
+    AuthModule,
+    UserModule,
+    ContactsheetModule,
+  ],
   controllers: [AppController],
-  providers: [AppService,{
-    provide: APP_FILTER,
-    useClass: HttpErrorFilter,
-  },{
-    provide: APP_INTERCEPTOR,
-    useClass:LoggingInterceptor
-  }],
-
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpErrorFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule {}
