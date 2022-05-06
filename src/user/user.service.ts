@@ -53,7 +53,15 @@ export class UserService {
     );
   }
   findUserByEmail(mail: string): Observable<any> {
-    return from(this.userRepository.findOne({ where: { email: mail } }));
+    return from(this.userRepository.findOne({ where: { email: mail } })).pipe(
+      map((user: UserI) => {
+        if (user) {
+          return user;
+        } else {
+          throw new HttpException('UnAuthozied User!', HttpStatus.UNAUTHORIZED);
+        }
+      }),
+    );
   }
 
   signIn(user: UserI): Observable<string> {
@@ -98,7 +106,11 @@ export class UserService {
     );
   }
   updateUserRole(id: number, user: User): Observable<any> {
-    return from(this.userRepository.update(id, user));
+    console.log(id);
+    console.log(user);
+    return from(this.userRepository.update(id, user)).pipe(
+      switchMap(() => this.findUserById(id)),
+    );
   }
   deleteUserById(id: number): Observable<any> {
     return from(this.userRepository.delete(id));

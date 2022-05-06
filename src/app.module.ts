@@ -22,16 +22,16 @@ dotenv.config();
 //console.log(process.env.DB_HOST);
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal:true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PWD,
-      database: process.env.DB_NAME,
+      type: 'postgres',
+      host: process.env.PSQL_DB_HOST,
+      port: parseInt(process.env.PSQL_DB_PORT),
+      username: process.env.PSQL_DB_USER,
+      password: process.env.PSQL_DB_PWD,
+      database: process.env.PSQL_DB_NAME,
       //entities: [__dirname + '/../**/*.entity.{js,ts}'],
-      entities: [ContactSheet,User],
+      entities: [ContactSheet, User],
       synchronize: true,
     }),
     AuthModule,

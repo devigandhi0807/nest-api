@@ -20,7 +20,7 @@ export class ContactsheetController {
     return this.contactService.findContactById(id);
   }
   @Get()
-  getAllContacts(): Observable<any>{
+  getAllContacts(): Observable<ContactSheetI[]> {
     return this.contactService.findAllContacts();
   }
   @Delete('/:cotactId')

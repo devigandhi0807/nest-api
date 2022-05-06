@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  HttpException,
+  HttpStatus,
   Delete,
   Get,
   Param,
@@ -60,7 +62,18 @@ export class UserController {
     @Param('id') id: string,
     @Body() user: User,
   ): Observable<User | object> {
-    return this.userService.updateUserRole(Number(id), user);
+    return this.userService.updateUserRole(Number(id), user).pipe(
+      map((user: User) => {
+        if (user) {
+          return user;
+        } else {
+          throw new HttpException(
+            'User Role Not Updated',
+            HttpStatus.NOT_MODIFIED,
+          );
+        }
+      }),
+    );
   }
   @Get('/:userId')
   getUserById(@Param('userId') id: string): Observable<any> {
